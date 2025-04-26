@@ -4,7 +4,10 @@ import express from 'express';
 import { connectDB } from './configs/db.js';
 import { clientDomain, port } from './configs/variables.js';
 import errorHandler from './middlewares/errorHandler.js';
+import admissionRoutes from './routes/admissionRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
+import generalRoutes from './routes/generalRoutes.js';
 
 const app = express();
 
@@ -17,7 +20,10 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.use('/api', generalRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/admission', admissionRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.use(errorHandler);
 
