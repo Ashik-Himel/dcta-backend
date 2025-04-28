@@ -61,7 +61,7 @@ export const forgotPassword = async (req, res, next) => {
         <p>This link is valid for one hour.</p>
         <br />
         <p>Best Regards,</p>
-        <p>DCTA</p>
+        <p>DCTA Team</p>
       `,
     });
 
