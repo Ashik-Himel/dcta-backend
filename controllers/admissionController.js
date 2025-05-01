@@ -1,4 +1,5 @@
 /* eslint-disable object-curly-newline */
+import { ObjectId } from 'mongodb';
 import { getDB } from '../configs/db.js';
 import sendEmail from '../configs/email.js';
 import { adminEmail } from '../configs/variables.js';
@@ -63,6 +64,36 @@ export const createApplication = async (req, res, next) => {
   }
 };
 
+export const getApplication = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Application ID is required',
+      });
+    }
+
+    const application = await db.collection('applications').findOne({ _id: new ObjectId(id) });
+
+    if (!application) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Application not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      application,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export const getRecentApplications = async (req, res, next) => {
   try {
     const db = getDB();
@@ -90,6 +121,112 @@ export const getAllApplications = async (req, res, next) => {
     return res.status(200).json({
       ok: true,
       allApplications,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const updateApplicationStatus = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!id || !status) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Application ID and status are required',
+      });
+    }
+
+    const updatedApplication = await db
+      .collection('applications')
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { status } },
+        { returnDocument: 'after' },
+      );
+
+    if (!updatedApplication) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Application not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Application status updated successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const updateAdminNote = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+    const { adminNote } = req.body;
+
+    if (!id || !adminNote) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Application ID and Admin Note are required',
+      });
+    }
+
+    const updatedApplication = await db
+      .collection('applications')
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { adminNote } },
+        { returnDocument: 'after' },
+      );
+
+    if (!updatedApplication) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Application not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Admin Note updated successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deleteApplication = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Application ID is required',
+      });
+    }
+
+    const deletedApplication = await db
+      .collection('applications')
+      .deleteOne({ _id: new ObjectId(id) });
+
+    if (!deletedApplication.deletedCount) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Application not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Application deleted successfully',
     });
   } catch (error) {
     return next(error);

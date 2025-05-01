@@ -1,4 +1,5 @@
 /* eslint-disable object-curly-newline */
+import { ObjectId } from 'mongodb';
 import { getDB } from '../configs/db.js';
 import sendEmail from '../configs/email.js';
 import { adminEmail } from '../configs/variables.js';
@@ -18,6 +19,7 @@ export const createContact = async (req, res, next) => {
     const newContact = {
       name,
       email,
+      subject,
       message,
       status: 'New',
       date: new Date(),
@@ -41,6 +43,36 @@ export const createContact = async (req, res, next) => {
     return res.status(201).json({
       ok: true,
       message: 'Message sent successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getContact = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Contact ID is required',
+      });
+    }
+
+    const contact = await db.collection('contacts').findOne({ _id: new ObjectId(id) });
+
+    if (!contact) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Contact not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      contact,
     });
   } catch (error) {
     return next(error);
@@ -74,6 +106,73 @@ export const getAllContacts = async (req, res, next) => {
     return res.status(200).json({
       ok: true,
       allContacts,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const updateContactStatus = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!id || !status) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Contact ID and status are required',
+      });
+    }
+
+    const updatedContact = await db
+      .collection('contacts')
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { status } },
+        { returnDocument: 'after' },
+      );
+
+    if (!updatedContact) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Contact not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Contact status updated successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deleteContact = async (req, res, next) => {
+  try {
+    const db = getDB();
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Contact ID is required',
+      });
+    }
+
+    const deletedContact = await db.collection('contacts').deleteOne({ _id: new ObjectId(id) });
+
+    if (!deletedContact.deletedCount) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Contact not found',
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Contact deleted successfully',
     });
   } catch (error) {
     return next(error);
