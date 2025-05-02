@@ -2,7 +2,7 @@
 
 import { clientDomain } from '../configs/variables.js';
 
-export const applicationTemplateAdmin = ({ course }) => `
+export const applicationTemplateAdmin = (course) => `
   <!DOCTYPE html>
   <html lang="en">
     <head>
