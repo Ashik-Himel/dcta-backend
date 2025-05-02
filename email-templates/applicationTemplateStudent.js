@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-export const applicationTemplateStudent = ({ fullName, course }) => `
+export const applicationTemplateStudent = (fullName, course) => `
   <!DOCTYPE html>
   <html lang="en">
     <head>
