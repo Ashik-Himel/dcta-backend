@@ -47,7 +47,7 @@ export const createApplicationEmailSent = async (req, res, next) => {
 
     await sendEmail({
       to: email,
-      subject: 'Application Received',
+      subject: 'Application Submitted to DCTA',
       html: applicationTemplateStudent(fullName, course),
     });
 
