@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-export const resetPasswordTemplate = ({ resetLink }) => `
+export const resetPasswordTemplate = (resetLink) => `
   <!DOCTYPE html>
   <html lang="en">
     <head>
