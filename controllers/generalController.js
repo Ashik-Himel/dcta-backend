@@ -14,10 +14,10 @@ export const getAdminStats = async (req, res, next) => {
     return res.status(200).json({
       ok: true,
       stats: {
-        applications: applicationsCount,
-        contacts: contactsCount,
-        newApplications: newApplicationsCount,
-        newContacts: newContactsCount,
+        applicationsCount,
+        contactsCount,
+        newApplicationsCount,
+        newContactsCount,
       },
     });
   } catch (error) {

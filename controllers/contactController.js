@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../configs/db.js';
 import sendEmail from '../configs/email.js';
 import { adminEmail } from '../configs/variables.js';
+import { contactTemplate } from '../email-templates/contactTemplate.js';
 
 export const createContact = async (req, res, next) => {
   try {
@@ -27,22 +28,28 @@ export const createContact = async (req, res, next) => {
 
     await db.collection('contacts').insertOne(newContact);
 
-    await sendEmail({
-      to: adminEmail,
-      subject: "Contact from DCTA's website",
-      html: `
-            <h3>Here is the contact details:</h3>
-            <p><span style:"font-weight:bold">Name:</span> ${name}</p>
-            <p><span style:"font-weight:bold">Email:</span> ${email}</p>
-            <p><span style:"font-weight:bold">Subject:</span> ${subject}</p>
-            <p style:"font-weight:bold">Message:</p>
-            <p>${message}</p>
-          `,
-    });
-
     return res.status(201).json({
       ok: true,
       message: 'Message sent successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const createContactEmailSent = async (req, res, next) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    await sendEmail({
+      to: adminEmail,
+      subject: "New Contact from DCTA's website",
+      html: contactTemplate(name, email, subject, message),
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Email sent successfully',
     });
   } catch (error) {
     return next(error);

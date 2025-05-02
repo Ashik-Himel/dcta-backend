@@ -2,6 +2,7 @@
 import express from 'express';
 import {
   createContact,
+  createContactEmailSent,
   deleteContact,
   getAllContacts,
   getContact,
@@ -12,11 +13,12 @@ import { authorizeAdmin, authorizeUser } from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
 
-router.post('/contacts', createContact);
-router.get('/recent-contacts', authorizeUser, authorizeAdmin, getRecentContacts);
-router.get('/all-contacts', authorizeUser, authorizeAdmin, getAllContacts);
+router.post('/', createContact);
+router.post('/email', createContactEmailSent);
+router.get('/', authorizeUser, authorizeAdmin, getAllContacts);
+router.get('/recent', authorizeUser, authorizeAdmin, getRecentContacts);
 router.get('/contact/:id', authorizeUser, authorizeAdmin, getContact);
-router.put('/contact/:id/status', authorizeUser, authorizeAdmin, updateContactStatus);
 router.delete('/contact/:id', authorizeUser, authorizeAdmin, deleteContact);
+router.put('/contact/:id/status', authorizeUser, authorizeAdmin, updateContactStatus);
 
 export default router;

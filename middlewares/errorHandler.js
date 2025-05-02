@@ -7,8 +7,8 @@ export default function errorHandler(err, req, res, next) {
 
   res.status(statusCode).json({
     ok: false,
+    message,
     error: {
-      message,
       ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
     },
   });

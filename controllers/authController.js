@@ -6,6 +6,7 @@ import { getDB } from '../configs/db.js';
 import sendEmail from '../configs/email.js';
 import redisClient from '../configs/redisClient.js';
 import { clientDomain, jwtSecret } from '../configs/variables.js';
+import { resetPasswordTemplate } from '../email-templates/resetPasswordTemplate.js';
 
 export const login = async (req, res, next) => {
   try {
@@ -54,15 +55,7 @@ export const forgotPassword = async (req, res, next) => {
     await sendEmail({
       to: user.email,
       subject: 'Reset Password - DCTA',
-      html: `
-        <h3>You requested to reset your DCTA account's password</h3>
-        <p>Click the link below to reset the password</p>
-        <a href="${resetLink}">Reset Password</a>
-        <p>This link is valid for one hour.</p>
-        <br />
-        <p>Best Regards,</p>
-        <p>DCTA Team</p>
-      `,
+      html: resetPasswordTemplate(resetLink),
     });
 
     return res.status(200).json({ ok: true, message: 'Password reset link sent to your email' });

@@ -3,6 +3,8 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../configs/db.js';
 import sendEmail from '../configs/email.js';
 import { adminEmail } from '../configs/variables.js';
+import { applicationTemplateAdmin } from '../email-templates/applicationTemplateAdmin.js';
+import { applicationTemplateStudent } from '../email-templates/applicationTemplateStudent.js';
 
 export const createApplication = async (req, res, next) => {
   try {
@@ -28,36 +30,36 @@ export const createApplication = async (req, res, next) => {
       date: new Date(),
     };
 
-    await sendEmail({
-      to: email,
-      subject: 'Application Received',
-      html: `
-        <p>Dear ${fullName},</p>
-        <p>Thank you for your application for the ${course} course.</p>
-        <p>We will review your application and get back to you soon.</p>
-        <br />
-        <p>Best regards,</p>
-        <p>DCTA Team</p>
-      `,
-    });
-
-    await sendEmail({
-      to: adminEmail,
-      subject: 'New Application Received',
-      html: `
-        <p>Dear Admin,</p>
-        <p>A new application has been received on the ${course} course.</p>
-        <p>Login to the DCTA admin panel to view details.</p>
-        <br />
-        <p>Thank You!</p>
-      `,
-    });
-
     await db.collection('applications').insertOne(newApplication);
 
     return res.status(201).json({
       ok: true,
       message: 'Application created successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const createApplicationEmailSent = async (req, res, next) => {
+  try {
+    const { fullName, email, course } = req.body;
+
+    await sendEmail({
+      to: email,
+      subject: 'Application Received',
+      html: applicationTemplateStudent(fullName, course),
+    });
+
+    await sendEmail({
+      to: adminEmail,
+      subject: 'New Application Received',
+      html: applicationTemplateAdmin(course),
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Email sent successfully',
     });
   } catch (error) {
     return next(error);

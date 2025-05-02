@@ -4,7 +4,7 @@ import express from 'express';
 import { connectDB } from './configs/db.js';
 import { clientDomain, port } from './configs/variables.js';
 import errorHandler from './middlewares/errorHandler.js';
-import admissionRoutes from './routes/admissionRoutes.js';
+import admissionRoutes from './routes/applicationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import generalRoutes from './routes/generalRoutes.js';
@@ -22,8 +22,8 @@ app.use(cookieParser());
 
 app.use('/api', generalRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/admission', admissionRoutes);
-app.use('/api/contact', contactRoutes);
+app.use('/api/applications', admissionRoutes);
+app.use('/api/contacts', contactRoutes);
 
 app.use(errorHandler);
 
