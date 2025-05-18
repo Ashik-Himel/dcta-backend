@@ -4,10 +4,15 @@ import express from 'express';
 import { connectDB } from './configs/db.js';
 import { clientDomain, port } from './configs/variables.js';
 import errorHandler from './middlewares/errorHandler.js';
-import admissionRoutes from './routes/applicationRoutes.js';
+import applicationRoutes from './routes/applicationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
+import faqRoutes from './routes/faqRoutes.js';
 import generalRoutes from './routes/generalRoutes.js';
+import instructorRoutes from './routes/instructorRoutes.js';
+import storyRoutes from './routes/storyRoutes.js';
 
 const app = express();
 
@@ -22,8 +27,13 @@ app.use(cookieParser());
 
 app.use('/api', generalRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/applications', admissionRoutes);
+app.use('/api/applications', applicationRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/stories', storyRoutes);
+app.use('/api/instructors', instructorRoutes);
+app.use('/api/faqs', faqRoutes);
 
 app.use(errorHandler);
 

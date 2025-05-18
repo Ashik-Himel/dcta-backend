@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 import express from 'express';
 import { getAdminStats } from '../controllers/generalController.js';
 import { authorizeAdmin, authorizeUser } from '../middlewares/authMiddleware.js';
