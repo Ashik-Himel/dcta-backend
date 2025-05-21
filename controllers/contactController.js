@@ -17,7 +17,10 @@ export const createContact = async (req, res, next) => {
       });
     }
 
+    const contactCount = await db.collection('contacts').countDocuments();
+
     const newContact = {
+      id: contactCount + 1,
       name,
       email,
       subject,

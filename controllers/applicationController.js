@@ -18,7 +18,10 @@ export const createApplication = async (req, res, next) => {
       });
     }
 
+    const applicationCount = await db.collection('applications').countDocuments();
+
     const newApplication = {
+      id: applicationCount + 1,
       fullName,
       email,
       phone,
@@ -172,10 +175,10 @@ export const updateAdminNote = async (req, res, next) => {
     const { id } = req.params;
     const { adminNote } = req.body;
 
-    if (!id || !adminNote) {
+    if (!id) {
       return res.status(400).json({
         ok: false,
-        message: 'Application ID and Admin Note are required',
+        message: 'Application ID is required',
       });
     }
 
