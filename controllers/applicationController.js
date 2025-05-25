@@ -18,10 +18,12 @@ export const createApplication = async (req, res, next) => {
       });
     }
 
-    const applicationCount = await db.collection('applications').countDocuments();
+    const lastApplication = (await db
+      .collection('applications')
+      .findOne({}, { sort: { id: -1 } })) || { id: 0 };
 
     const newApplication = {
-      id: applicationCount + 1,
+      id: lastApplication.id + 1,
       fullName,
       email,
       phone,

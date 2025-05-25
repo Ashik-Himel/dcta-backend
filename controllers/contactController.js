@@ -17,10 +17,12 @@ export const createContact = async (req, res, next) => {
       });
     }
 
-    const contactCount = await db.collection('contacts').countDocuments();
+    const lastContact = (await db.collection('contacts').findOne({}, { sort: { id: -1 } })) || {
+      id: 0,
+    };
 
     const newContact = {
-      id: contactCount + 1,
+      id: lastContact.id + 1,
       name,
       email,
       subject,
