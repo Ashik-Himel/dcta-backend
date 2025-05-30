@@ -18,7 +18,7 @@ const router = express.Router();
 router.get('/', getCourses);
 router.get('/popular', getPopularCourses);
 router.post('/', authorizeUser, authorizeAdmin, upload.single('thumbnail'), createCourse);
-router.put('/course/:id', authorizeUser, authorizeAdmin, updateCourse);
+router.put('/course/:id', authorizeUser, authorizeAdmin, upload.single('thumbnail'), updateCourse);
 router.delete('/course/:id', authorizeUser, authorizeAdmin, deleteCourse);
 router.get('/slug/:slug', slugCheck);
 

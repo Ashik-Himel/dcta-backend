@@ -85,7 +85,7 @@ export const createStory = async (req, res, next) => {
       course: req.body.course,
       thumbnail: `https://img.youtube.com/vi/${req.body.videoId}/maxresdefault.jpg`,
       video: `https://youtube.com/embed/${req.body.videoId}`,
-      featured: req.body.featured,
+      featured: req.body.featured === 'true',
     };
 
     if (req.file) {
@@ -129,7 +129,7 @@ export const updateStory = async (req, res, next) => {
       return res.status(404).json({ ok: false, message: 'Success story not found' });
     }
 
-    const updateData = { ...req.body };
+    const updateData = { ...req.body, featured: req.body.featured === 'true' };
 
     if (req.file) {
       try {
@@ -146,7 +146,6 @@ export const updateStory = async (req, res, next) => {
           );
           stream.end(req.file.buffer);
         });
-
         updateData.avatar = uploadResult.secure_url;
       } catch (err) {
         return res.status(500).json({ ok: false, message: 'Failed to upload image' });

@@ -113,6 +113,7 @@ export const createCourse = async (req, res, next) => {
         await db.collection('courses').insertOne({
           id: lastCourse.id + 1,
           ...req.body,
+          featured: req.body.featured === 'true',
           thumbnail: result?.secure_url,
         });
         return res.status(201).json({ ok: true, message: 'Course created successfully' });
@@ -135,7 +136,7 @@ export const updateCourse = async (req, res, next) => {
       return res.status(404).json({ ok: false, message: 'Course not found' });
     }
 
-    const updateData = { ...req.body };
+    const updateData = { ...req.body, featured: req.body.featured === 'true' };
 
     if (req.file) {
       try {
@@ -152,7 +153,6 @@ export const updateCourse = async (req, res, next) => {
           );
           stream.end(req.file.buffer);
         });
-
         updateData.thumbnail = uploadResult.secure_url;
       } catch (err) {
         return res.status(500).json({ ok: false, message: 'Failed to upload image' });

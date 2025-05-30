@@ -100,7 +100,6 @@ export const updateCategory = async (req, res, next) => {
           );
           stream.end(req.file.buffer);
         });
-
         updateData.img = uploadResult.secure_url;
       } catch (err) {
         return res.status(500).json({ ok: false, message: 'Failed to upload image' });
