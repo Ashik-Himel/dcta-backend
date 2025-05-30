@@ -6,12 +6,14 @@ import { clientDomain, port } from './configs/variables.js';
 import errorHandler from './middlewares/errorHandler.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import badgeRoutes from './routes/badgeRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import faqRoutes from './routes/faqRoutes.js';
 import generalRoutes from './routes/generalRoutes.js';
 import instructorRoutes from './routes/instructorRoutes.js';
+import socialRoutes from './routes/socialRoutes.js';
 import storyRoutes from './routes/storyRoutes.js';
 
 const app = express();
@@ -34,6 +36,8 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/stories', storyRoutes);
 app.use('/api/instructors', instructorRoutes);
 app.use('/api/faqs', faqRoutes);
+app.use('/api/badges', badgeRoutes);
+app.use('/api/socials', socialRoutes);
 
 app.use(errorHandler);
 

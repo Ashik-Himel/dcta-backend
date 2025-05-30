@@ -57,6 +57,7 @@ export const createCategory = async (req, res, next) => {
         if (error) {
           return res.status(500).json({ ok: false, message: 'Failed to upload image' });
         }
+
         await db.collection('categories').insertOne({
           id: lastCategory.id + 1,
           ...req.body,
@@ -124,10 +125,12 @@ export const deleteCategory = async (req, res, next) => {
   try {
     const db = getDB();
     const { id } = req.params;
+
     const result = await db.collection('categories').deleteOne({ _id: new ObjectId(id) });
     if (result.deletedCount === 0) {
       return res.status(404).json({ ok: false, message: 'Category not found' });
     }
+
     return res.status(200).json({ ok: true, message: 'Category deleted successfully' });
   } catch (error) {
     return next(error);
